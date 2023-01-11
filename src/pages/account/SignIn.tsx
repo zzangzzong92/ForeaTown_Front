@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
@@ -16,8 +17,33 @@ const SignIn: React.FC = () => {
     setPasswordValue(e.target.value);
   };
 
-  const clickSignUp = () => {
-    navigate("/signup");
+  const clickSignIn = async () => {
+    if (!emailValue) {
+      alert("Please enter your email");
+    } else if (!passwordValue) {
+      alert("Please check your password");
+    } else {
+      try {
+        const signInResponse = await axios.post(
+          "https://api.foreatown.com/users/login",
+          {
+            email: emailValue,
+            password: passwordValue,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (signInResponse.status === 200) {
+          alert("Welcome! You have successfully signed");
+          navigate("/");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -44,10 +70,10 @@ const SignIn: React.FC = () => {
           required
           onChange={passwordInputHandler}
         ></PasswordInput>
-        <SignInButton state={buttonColor}>Signin</SignInButton>
-        <InduceSignUp onClick={clickSignUp}>
-          Don't you have an account?
-        </InduceSignUp>
+        <SignInButton state={buttonColor} onClick={clickSignIn}>
+          Signin
+        </SignInButton>
+        <InduceSignUp>Don't you have an account?</InduceSignUp>
         <Horizontal></Horizontal>
         <KakaoSignInButton>Signin with kakao</KakaoSignInButton>
       </SignInContentWrapper>

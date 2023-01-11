@@ -7,3 +7,11 @@ export interface User {
   location: string;
   country: string;
 }
+
+export interface Location {
+  name: string;
+}
+
+export interface Country {
+  name: string;
+}

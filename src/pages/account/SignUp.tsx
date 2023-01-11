@@ -44,12 +44,12 @@ const SignUp: React.FC = () => {
     } else {
       try {
         const signUpResponse = await axios.post(
-          "http://172.30.1.90:8000/users/signup",
+          "https://api.foreatown.com/users/signup",
           {
-            email: emailInput,
-            password: pwInput,
-            password2: pwCheckInput,
             name: nameInput,
+            email: emailInput,
+            password1: pwInput,
+            password2: pwCheckInput,
           },
           {
             headers: {
@@ -58,7 +58,7 @@ const SignUp: React.FC = () => {
           }
         );
         if (signUpResponse.status === 201) {
-          alert(`${nameInput} 님 회원가입이 완료되었습니다`);
+          alert(`${nameInput}, Welcome to the membership!`);
           navigate("/");
         }
       } catch (error) {
@@ -145,9 +145,11 @@ const NameInput = styled.input`
   background-color: #f5f7fa;
   outline: none;
   border: none;
+  border-radius: 4px;
 
   :focus {
-    border-bottom: 1px solid #526dee;
+    border: 1px solid #526dee;
+    border-radius: 4px;
   }
 `;
 
@@ -158,9 +160,11 @@ const EmailInput = styled.input`
   background-color: #f5f7fa;
   outline: none;
   border: none;
+  border-radius: 4px;
 
   :focus {
-    border-bottom: 1px solid #526dee;
+    border: 1px solid #526dee;
+    border-radius: 4px;
   }
 `;
 
@@ -171,9 +175,11 @@ const PasswordInput = styled.input`
   background-color: #f5f7fa;
   outline: none;
   border: none;
+  border-radius: 4px;
 
   :focus {
-    border-bottom: 1px solid #526dee;
+    border: 1px solid #526dee;
+    border-radius: 4px;
   }
 `;
 
@@ -184,9 +190,11 @@ const PasswordCheckInput = styled.input`
   background-color: #f5f7fa;
   outline: none;
   border: none;
+  border-radius: 4px;
 
   :focus {
-    border-bottom: 1px solid #526dee;
+    border: 1px solid #526dee;
+    border-radius: 4px;
   }
 `;
 
