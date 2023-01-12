@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface CountryDropProps {
@@ -11,25 +11,25 @@ const CountryDrop: React.FC<CountryDropProps> = ({
   countryValue,
   setSelectedCountry,
 }) => {
-  const [countryList, setCountryList] = useState([]);
+  const [countryList, setCountryList] = useState<string[]>([]);
 
   useEffect(() => {
     axios
       .get(`https://api.foreatown.com/users/country/list?name=`)
-      .then((list) =>
+      .then((country) =>
         // console.log(typeof list.data.name, list.data.name)
-        setCountryList(list.data)
+        setCountryList(country.data)
       );
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(`https://api.foreatown.com/users/country/list?name=${countryValue}}`)
-      .then((list) =>
-        // console.log(list)
-        setCountryList(list.data)
-      );
-  }, [countryValue]);
+  // useEffect(() => {
+  //   axios
+  //     .get(`https://api.foreatown.com/users/country/list?name=${countryValue}}`)
+  //     .then((list) =>
+  //       // console.log(list)
+  //       setCountryList(list.data)
+  //     );
+  // }, [countryValue]);
 
   return (
     <CountryDropContainer>
@@ -50,10 +50,10 @@ const CountryDrop: React.FC<CountryDropProps> = ({
 export default CountryDrop;
 
 const CountryDropContainer = styled.div`
-  width: 80%;
-  height: 150px;
-  position: relative;
-  margin: 1px 0 0 40px;
+  width: 100%;
+  height: 190px;
+  position: absolute;
+  margin: 1px 0 0 0;
   padding: 0.2rem;
   height: 100px;
   background-color: #fff;
@@ -68,7 +68,7 @@ const CountryDropContentsWrapper = styled.div`
 `;
 
 const CountryContent = styled.div`
-  width: 80%;
+  width: inherit;
   display: block;
   height: 100%;
   margin: 5px 0 5px 10px;
@@ -77,5 +77,6 @@ const CountryContent = styled.div`
 
   :hover {
     background-color: gray;
+    border-radius: 4px;
   }
 `;

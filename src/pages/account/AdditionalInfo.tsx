@@ -1,14 +1,13 @@
-import axios from "axios";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import CountryDrop from "../../components/CountryDrop";
+import LocationDrop from "../../components/LocationDrop";
 import * as Entity from "../../types/index";
-// import LocationDrop from "../../components/LocationDrop";
 
 const AdditionalInfo: React.FC = () => {
   const [nickName, setNickName] = useState<string>("");
   const [age, setAge] = useState<string>("");
-  const [sexChecked, setSexCheck] = useState<string>();
+  const [sexChecked, setSexChecked] = useState<string>("");
   //국가
   const [isCountryDrop, setIsCountryDrop] = useState<boolean>(false);
   const [countryValue, setCountryValue] = useState<string>("");
@@ -17,6 +16,7 @@ const AdditionalInfo: React.FC = () => {
   //위치
   const [isLocationDrop, setIsLocationDrop] = useState<boolean>(false);
   const [locationValue, setLocationValue] = useState<string>("");
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
 
   const nickNameValue = (e: ChangeEvent<HTMLInputElement>) =>
     setNickName(e.target.value);
@@ -29,9 +29,9 @@ const AdditionalInfo: React.FC = () => {
   const locationInput = (e: ChangeEvent<HTMLInputElement>) =>
     setLocationValue(e.target.value);
 
-  const radioHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setSexCheck(e.target.value);
+  const radioHandler = (radioName: string) => {
+    setSexChecked(radioName);
+    // console.log(e.target.value);
     console.log(sexChecked);
   };
 
@@ -39,15 +39,12 @@ const AdditionalInfo: React.FC = () => {
     setIsLocationDrop(!isLocationDrop);
   };
 
-  const countryHandler = () => setIsCountryDrop(!isCountryDrop);
+  const countryHandler = () => {
+    setIsCountryDrop(!isCountryDrop);
+  };
 
   // useEffect(() => {
-  //   const radioHandler = (e: ChangeEvent<HTMLInputElement>) => {
-  //     e.preventDefault();
-  //     setSexCheck(e.target.value);
-  //     console.log(sexChecked);
-  //   };
-
+  //   if(!age && !)
   // }, []);
 
   return (
@@ -69,21 +66,21 @@ const AdditionalInfo: React.FC = () => {
 
         {/* 성별 */}
         <SexSelect>
-          <Label id="male">
+          <Label id="Male">
             <SexRadioButton
               type="radio"
               value="Male"
-              name="gender"
-              onChange={radioHandler}
+              checked={sexChecked === "Male"}
+              onChange={() => radioHandler("Male")}
             />
             Male
           </Label>
-          <Label id="female">
+          <Label id="Female">
             <SexRadioButton
               type="radio"
               value="Female"
-              name="gender"
-              onChange={radioHandler}
+              checked={sexChecked === "Female"}
+              onChange={() => radioHandler("Female")}
             />
             Female
           </Label>
@@ -96,16 +93,16 @@ const AdditionalInfo: React.FC = () => {
             placeholder="Please enter your country"
             required
             onChange={countryInput}
-          >
-            {selectedCountry}
-          </CountryInput>
+            value={selectedCountry}
+          ></CountryInput>
+          {isCountryDrop && (
+            <CountryDrop
+              countryValue={countryValue}
+              setSelectedCountry={setSelectedCountry}
+              setIsCountryDrop={setIsCountryDrop}
+            />
+          )}
         </CountryWrapper>
-        {isCountryDrop && (
-          <CountryDrop
-            countryValue={countryValue}
-            setSelectedCountry={setSelectedCountry}
-          />
-        )}
 
         {/* 위치 */}
         <LocationWrapper onClick={locationHandler}>
@@ -114,12 +111,15 @@ const AdditionalInfo: React.FC = () => {
             placeholder="Please enter your location"
             required
             onChange={locationInput}
-          >
-            {/* {locationValue} */}
-          </LocationInput>
+            value={selectedLocation}
+          ></LocationInput>
           {/* 여기서 locationList를 map돌려서  */}
-          {/* {isLocationDrop && <LocationDrop locationState={locationState} />} */}
-          {isLocationDrop && <div>위치정보가 쫘라락 나와야함</div>}
+          {isLocationDrop && (
+            <LocationDrop
+              locationValue={locationValue}
+              setSelectedLocation={setSelectedLocation}
+            />
+          )}
         </LocationWrapper>
 
         <DoneButton>Done</DoneButton>
@@ -191,56 +191,38 @@ const AgeInput = styled.input`
 const SexSelect = styled.div`
   width: 80%;
   display: inline-flex;
-  /* justify-content: space-around; */
-  overflow: hidden;
   margin: 20px 0 0 40px;
   display: flex;
   border-radius: 4px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
 `;
 
-const SexRadioButton = styled.input.attrs({ type: "radio" })`
+const SexRadioButton = styled.input`
   width: 80%;
-  display: none;
+  /* display: none; */
+  visibility: hidden;
 
-  input:checked {
+  &:checked {
     padding: 8px 14px;
     font-size: 16px;
     color: black;
-    background-color: #fff;
-    /* transition: background 0.1s; */
+    /* background-color: #fff; */
+    background-color: #0d47a1;
   }
+
+  /* &:checked + Label {
+    background-color: #0d47a1;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+  } */
 `;
 
 const Label = styled.label`
   width: 100%;
   text-align: center;
-  line-height: 40px;
+  /* line-height: 20px; */
   cursor: pointer;
-
-  &:checked + Label {
-    background-color: #0d47a1;
-    color: #fff;
-    border: 1px solid #fff;
-    border-radius: 4px;
-  }
-`;
-
-const LocationWrapper = styled.div`
-  width: 80%;
-  margin: 20px 0 0 40px;
-  background-color: #f5f7fa;
-  outline: none;
-  border: 1px solid black;
-`;
-
-const LocationInput = styled.input`
-  width: 80%;
-  padding: 14px 16px;
-  background-color: #f5f7fa;
-  outline: none;
-  border: none;
-  border-radius: 4px;
 `;
 
 const CountryWrapper = styled.div`
@@ -249,16 +231,42 @@ const CountryWrapper = styled.div`
   margin: 20px 0 0 40px;
   background-color: #f5f7fa;
   outline: none;
-  border: 1px solid black;
 `;
 
 const CountryInput = styled.input`
-  width: 80%;
+  width: 100%;
   padding: 14px 16px;
   background-color: #f5f7fa;
   outline: none;
   border: none;
   border-radius: 4px;
+
+  :focus {
+    border: 1px solid #526dee;
+    border-radius: 4px;
+  }
+`;
+
+const LocationWrapper = styled.div`
+  width: 80%;
+  position: relative;
+  margin: 20px 0 0 40px;
+  background-color: #f5f7fa;
+  outline: none;
+`;
+
+const LocationInput = styled.input`
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #f5f7fa;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+
+  :focus {
+    border: 1px solid #526dee;
+    border-radius: 4px;
+  }
 `;
 
 const DoneButton = styled.button`
