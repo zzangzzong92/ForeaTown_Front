@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
+import rootUrl from "../../data/rootUrl";
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const SignIn: React.FC = () => {
     } else {
       try {
         const signInResponse = await axios.post(
-          "https://api.foreatown.com/users/login",
+          `${rootUrl}/users/login`,
           {
             email: emailValue,
             password: passwordValue,

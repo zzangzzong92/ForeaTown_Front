@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
+import rootUrl from "../../data/rootUrl";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -35,35 +36,37 @@ const SignUp: React.FC = () => {
   const clickSignUpHandler = async () => {
     if (!nameInput) {
       alert("Please enter your name");
-    } else if (!emailInput) {
+    }
+    if (!emailInput) {
       alert("Please enter your email");
-    } else if (!pwInput || !pwCheckInput) {
+    }
+    if (!pwInput || !pwCheckInput) {
       alert("Please check your password");
-    } else if (pwInput !== pwCheckInput) {
+    }
+    if (pwInput !== pwCheckInput) {
       alert("Do not match password");
-    } else {
-      try {
-        const signUpResponse = await axios.post(
-          "https://api.foreatown.com/users/signup",
-          {
-            name: nameInput,
-            email: emailInput,
-            password1: pwInput,
-            password2: pwCheckInput,
+    }
+    try {
+      const signUpResponse = await axios.post(
+        `${rootUrl}/users/signup`,
+        {
+          name: nameInput,
+          email: emailInput,
+          password1: pwInput,
+          password2: pwCheckInput,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (signUpResponse.status === 201) {
-          alert(`${nameInput}, Welcome to the membership!`);
-          navigate("/");
         }
-      } catch (error) {
-        console.log(error);
+      );
+      if (signUpResponse.status === 201) {
+        alert(`${nameInput}, Welcome to the membership!`);
+        navigate("/");
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 

@@ -1,11 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
+import rootUrl from "../data/rootUrl";
 import * as Entity from "../types/index";
 
 interface LocationDropProps {
   locationValue: string;
-  setSelectedLocation: string;
+  setSelectedLocation: Dispatch<SetStateAction<string>>;
 }
 
 const LocationDrop: React.FC<LocationDropProps> = ({
@@ -13,17 +14,38 @@ const LocationDrop: React.FC<LocationDropProps> = ({
   setSelectedLocation,
 }) => {
   const [locationList, setLocationList] = useState<string[]>([]);
+  const locationItems = [
+    { name: "HongDae" },
+    { name: "Jamsil" },
+    { name: "Gangnam" },
+    { name: "Seolleung" },
+    { name: "Samsung" },
+    { name: "Yeoksam" },
+    { name: "Kyodae" },
+    { name: "Nonhyun" },
+    { name: "Geondae" },
+    { name: "Sindang" },
+    { name: "Jongro" },
+  ];
 
-  useEffect(() => {
-    axios.get("").then((location) => setLocationList(location.data));
-  }, []);
+  // useEffect(() => {
+  //   axios.get(`${rootUrl}/`).then((location) => setLocationList(location.data));
+  // }, []);
   return (
     <LocationDropContainer>
       <LocationDropContentsWrapper>
-        {locationList?.map((locationName: string, index) => (
+        {/* {locationList?.map((locationName: string, index) => (
           <LocationContent
             key={index}
             onclick={() => setSelectedLocation(locationName.name)}
+          >
+            {locationName.name}
+          </LocationContent>
+        ))} */}
+        {locationItems.map((locationName, index) => (
+          <LocationContent
+            key={index}
+            onClick={() => setSelectedLocation(locationName.name)}
           >
             {locationName.name}
           </LocationContent>
@@ -54,7 +76,6 @@ const LocationDropContentsWrapper = styled.div`
 `;
 
 const LocationContent = styled.div`
-  width: inherit;
   display: block;
   height: 100%;
   margin: 5px 0 5px 10px;

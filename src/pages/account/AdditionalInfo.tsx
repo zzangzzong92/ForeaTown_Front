@@ -1,13 +1,18 @@
+import FileUploader from "../../components/FileUploader";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import styled from "styled-components";
 import CountryDrop from "../../components/CountryDrop";
 import LocationDrop from "../../components/LocationDrop";
-import * as Entity from "../../types/index";
+// import RadioButtion from "../../components/RadioButton";
+// import * as Entity from "../../types/index";
 
 const AdditionalInfo: React.FC = () => {
+  const navigate = useNavigate();
   const [nickName, setNickName] = useState<string>("");
   const [age, setAge] = useState<string>("");
   const [sexChecked, setSexChecked] = useState<string>("");
+  const [buttonColor, setButtonColor] = useState<boolean>(false);
   //국가
   const [isCountryDrop, setIsCountryDrop] = useState<boolean>(false);
   const [countryValue, setCountryValue] = useState<string>("");
@@ -16,7 +21,10 @@ const AdditionalInfo: React.FC = () => {
   //위치
   const [isLocationDrop, setIsLocationDrop] = useState<boolean>(false);
   const [locationValue, setLocationValue] = useState<string>("");
-  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [selectedLocation, setSelectedLocation] = useState();
+
+  //프로필
+  const [userImage, setUserImage] = useState<string>("");
 
   const nickNameValue = (e: ChangeEvent<HTMLInputElement>) =>
     setNickName(e.target.value);
@@ -43,9 +51,32 @@ const AdditionalInfo: React.FC = () => {
     setIsCountryDrop(!isCountryDrop);
   };
 
-  // useEffect(() => {
-  //   if(!age && !)
-  // }, []);
+  const userImageHandler = () => {};
+
+  const signupHandler = async () => {
+    if (!nickName) {
+      alert("Please enter your nickName");
+    }
+    if (!age) {
+      alert("Please enter your age");
+    }
+    if (!countryValue) {
+      alert("Please enter your countryValue");
+    }
+    if (!locationValue) {
+      alert("Please enter your locationValue");
+    }
+    setButtonColor(true);
+    navigate("/");
+  };
+
+  useEffect(() => {
+    if (nickName && age && countryValue && locationValue) {
+      setButtonColor(true);
+    } else {
+      setButtonColor(false);
+    }
+  }, [nickName, age, countryValue, locationValue]);
 
   return (
     <AdditionalInfoContainer>
@@ -56,13 +87,13 @@ const AdditionalInfo: React.FC = () => {
           placeholder="Please enter your nickname"
           required
           onChange={nickNameValue}
-        ></NicknameInput>
+        />
         <AgeInput
           type="text"
           placeholder="Please enter your age"
           required
           onChange={ageValue}
-        ></AgeInput>
+        />
 
         {/* 성별 */}
         <SexSelect>
@@ -94,12 +125,11 @@ const AdditionalInfo: React.FC = () => {
             required
             onChange={countryInput}
             value={selectedCountry}
-          ></CountryInput>
+          />
           {isCountryDrop && (
             <CountryDrop
               countryValue={countryValue}
               setSelectedCountry={setSelectedCountry}
-              setIsCountryDrop={setIsCountryDrop}
             />
           )}
         </CountryWrapper>
@@ -112,8 +142,7 @@ const AdditionalInfo: React.FC = () => {
             required
             onChange={locationInput}
             value={selectedLocation}
-          ></LocationInput>
-          {/* 여기서 locationList를 map돌려서  */}
+          />
           {isLocationDrop && (
             <LocationDrop
               locationValue={locationValue}
@@ -122,7 +151,14 @@ const AdditionalInfo: React.FC = () => {
           )}
         </LocationWrapper>
 
-        <DoneButton>Done</DoneButton>
+        {/* 프로필사진 */}
+        <ProFileImageSection>
+          <FileUploader userImage={userImage} />
+        </ProFileImageSection>
+
+        <DoneButton onClick={signupHandler} state={buttonColor}>
+          Done
+        </DoneButton>
       </AdditionalContentWrapper>
     </AdditionalInfoContainer>
   );
@@ -132,8 +168,8 @@ export default AdditionalInfo;
 
 const AdditionalInfoContainer = styled.div`
   width: 412px;
-  height: 506px;
-  margin: 127px auto;
+  height: 706px;
+  margin: 97px auto;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -190,7 +226,7 @@ const AgeInput = styled.input`
 
 const SexSelect = styled.div`
   width: 80%;
-  display: inline-flex;
+  /* display: inline-flex; */
   margin: 20px 0 0 40px;
   display: flex;
   border-radius: 4px;
@@ -199,14 +235,13 @@ const SexSelect = styled.div`
 
 const SexRadioButton = styled.input`
   width: 80%;
-  /* display: none; */
-  visibility: hidden;
+  display: none;
+  /* visibility: hidden; */
 
   &:checked {
     padding: 8px 14px;
     font-size: 16px;
     color: black;
-    /* background-color: #fff; */
     background-color: #0d47a1;
   }
 
@@ -220,6 +255,7 @@ const SexRadioButton = styled.input`
 
 const Label = styled.label`
   width: 100%;
+  line-height: 40px;
   text-align: center;
   /* line-height: 20px; */
   cursor: pointer;
@@ -269,11 +305,17 @@ const LocationInput = styled.input`
   }
 `;
 
-const DoneButton = styled.button`
+const DoneButton = styled.button<{ state: boolean }>`
   width: 80%;
   height: 36px;
   margin: 20px 0 0 40px;
   border: none;
   border-radius: 4px;
   color: #fff;
+  background-color: ${(props) => (props.state ? "#526dee " : "#C8D1E0")};
+`;
+
+const ProFileImageSection = styled.div`
+  width: 100%;
+  margin-top: 20px;
 `;

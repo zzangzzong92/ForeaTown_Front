@@ -1,10 +1,11 @@
 import axios from "axios";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
+import rootUrl from "../data/rootUrl";
 
 interface CountryDropProps {
   countryValue: string;
-  setSelectedCountry: string;
+  setSelectedCountry: Dispatch<SetStateAction<string>>;
 }
 
 const CountryDrop: React.FC<CountryDropProps> = ({
@@ -14,12 +15,10 @@ const CountryDrop: React.FC<CountryDropProps> = ({
   const [countryList, setCountryList] = useState<string[]>([]);
 
   useEffect(() => {
-    axios
-      .get(`https://api.foreatown.com/users/country/list?name=`)
-      .then((country) =>
-        // console.log(typeof list.data.name, list.data.name)
-        setCountryList(country.data)
-      );
+    axios.get(`${rootUrl}/users/country/list?name=`).then((country) =>
+      // console.log(typeof list.data.name, list.data.name)
+      setCountryList(country.data)
+    );
   }, []);
 
   // useEffect(() => {
@@ -68,7 +67,6 @@ const CountryDropContentsWrapper = styled.div`
 `;
 
 const CountryContent = styled.div`
-  width: inherit;
   display: block;
   height: 100%;
   margin: 5px 0 5px 10px;
