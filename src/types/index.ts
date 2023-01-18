@@ -27,3 +27,8 @@ export interface Language {
   groupMembers: number;
   groupMaster: string;
 }
+
+export interface SignIn {
+  email: string;
+  password: string;
+}

@@ -9,9 +9,6 @@ import rootUrl from "data/rootUrl";
 const Main: React.FC = () => {
   const [languageList, setLanguageList] = useState<Entity.Language[]>([]);
 
-  useEffect(() => {
-    axios.get(`${rootUrl}/foreatown/gather-room/list?order_by=latest&page=1`).then((list) => setLanguageList(list.data)
-  } ,[])
   return (
     <MainContainer>
       <MainContentsWrapper>

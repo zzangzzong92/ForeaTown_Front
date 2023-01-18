@@ -3,81 +3,114 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import rootUrl from "../../data/rootUrl";
+import * as Entity from "../../types/index";
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
-  const [emailValue, setEmailValue] = useState<string>();
-  const [passwordValue, setPasswordValue] = useState<string>();
+  const formData = new FormData();
+  const [signInFormData, setSignInFormData] = useState<Entity.SignIn>({
+    email: "",
+    password: "",
+  });
   const [buttonColor, setButtonColor] = useState<boolean>(false);
 
-  const emailInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmailValue(e.target.value);
+  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setSignInFormData({ ...signInFormData, [e.target.name]: e.target.value });
   };
 
-  const passwordInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setPasswordValue(e.target.value);
+  console.log(signInFormData.email);
+  console.log(signInFormData.password);
+
+  const signUpHandler = () => {
+    navigate("/signup");
   };
 
-  const clickSignIn = async () => {
-    if (!emailValue) {
-      alert("Please enter your email");
-    } else if (!passwordValue) {
-      alert("Please check your password");
-    } else {
-      try {
-        const signInResponse = await axios.post(
-          `${rootUrl}/users/login`,
-          {
-            email: emailValue,
-            password: passwordValue,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (signInResponse.status === 200) {
-          alert("Welcome! You have successfully signed");
-          navigate("/");
-        }
-      } catch (error) {
-        console.log(error);
+  // const clickSignIn = async () => {
+  //   if (!signInFormData.email) {
+  //     alert("Please enter your email");
+  //   } else if (!signInFormData.password) {
+  //     alert("Please check your password");
+  //   } else {
+  //     try {
+  //       const signInResponse = await axios.post(
+  //         `${rootUrl}/users/login`,
+  //         {
+  //           body: signInFormData,
+  //         },
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //         }
+  //       );
+  //       if (signInResponse.status === 200) {
+  //         alert("Welcome! You have successfully signed");
+  //         navigate("/main");
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // };
+  const submitHandler = async (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("click");
+
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("email", signInFormData.email);
+      formData.append("password", signInFormData.password);
+
+      const response = await axios.post(`${rootUrl}/users/login`, formData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      if (response.status === 200) {
+        alert("Welcome! You have successfully signed in");
+        navigate("/main");
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    if (emailValue && passwordValue) {
+    if (formData.values.name) {
       setButtonColor(true);
     } else {
       setButtonColor(false);
     }
-  }, [emailValue, passwordValue]);
+  }, [formData.values.name]);
+
   return (
     <SignInContainer>
-      <SignInContentWrapper>
+      <SignInForm onSubmit={submitHandler}>
         <ForeaLogo>ForeaTown</ForeaLogo>
         <EmailInput
           type="email"
+          name="email"
           placeholder="Please enter your email address"
           required
           autoComplete="true"
-          onChange={emailInputHandler}
-        ></EmailInput>
+          value={signInFormData.email}
+          onChange={onChangeHandler}
+        />
         <PasswordInput
           type="password"
+          name="password"
           placeholder="Please enter your password"
           required
-          onChange={passwordInputHandler}
-        ></PasswordInput>
-        <SignInButton state={buttonColor} onClick={clickSignIn}>
-          Signin
-        </SignInButton>
-        <InduceSignUp>Don't you have an account?</InduceSignUp>
-        <Horizontal></Horizontal>
+          value={signInFormData.password}
+          onChange={onChangeHandler}
+        />
+        <SignInButton type="submit">Signin</SignInButton>
+        <InduceSignUp onClick={signUpHandler}>
+          Don't you have an account?
+        </InduceSignUp>
+        <Horizontal />
         <KakaoSignInButton>Signin with kakao</KakaoSignInButton>
-      </SignInContentWrapper>
+      </SignInForm>
     </SignInContainer>
   );
 };
@@ -95,7 +128,7 @@ const SignInContainer = styled.div`
   border-radius: 8px;
 `;
 
-const SignInContentWrapper = styled.div`
+const SignInForm = styled.form`
   width: 100%;
   height: 100%;
   display: flex;
@@ -139,7 +172,7 @@ const PasswordInput = styled.input`
   }
 `;
 
-const SignInButton = styled.button<{ state: boolean }>`
+const SignInButton = styled.button`
   width: 80%;
   height: 36px;
   margin: 20px auto;
@@ -152,7 +185,7 @@ const SignInButton = styled.button<{ state: boolean }>`
   font-weight: 400;
   font-size: 14px;
   line-height: 36px;
-  background: ${(state) => (state ? "#526dee" : "#C8D1E0")};
+  /* background: ${(state) => (state ? "#526dee" : "#C8D1E0")}; */
   color: #ffffff;
   cursor: pointer;
 `;

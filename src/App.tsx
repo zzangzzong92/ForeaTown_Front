@@ -5,6 +5,8 @@ import AdditionalInfo from "./pages/account/AdditionalInfo";
 import SignIn from "./pages/account/SignIn";
 import SignUp from "./pages/account/SignUp";
 import Main from "./pages/Main";
+import Detail from "./pages/Detail";
+import MyPage from "./pages/MyPage";
 
 function App() {
   return (
@@ -14,6 +16,9 @@ function App() {
         <Route path="/main" element={<Main />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/additional" element={<AdditionalInfo />} />
+        <Route path="/main" element={<Main />} />
+        <Route path="/group/:id" element={<Detail />} />
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/card" element={<LanguageCard />} />
       </Routes>
     </BrowserRouter>

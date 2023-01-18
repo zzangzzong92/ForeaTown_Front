@@ -16,7 +16,7 @@ const LanguageCard: React.FC<LanguageProps> = () => {
       <TypeInfoSection>
         <GroupTitle>
           Looking for language exchange!
-          <br />
+          {/* <br /> */}
           Spanish(me)-Korean(you)
         </GroupTitle>
         <CreateAt>📅 2023-01-23</CreateAt>
@@ -66,7 +66,10 @@ const TypeInfoSection = styled.div`
   border-bottom: 1px solid black;
 `;
 
-const GroupTitle = styled.div``;
+const GroupTitle = styled.div`
+  font-size: 16px;
+  white-space: pre-wrap;
+`;
 
 const CreateAt = styled.div`
   margin-top: 10px;
